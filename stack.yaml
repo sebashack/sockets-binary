@@ -1,0 +1,5 @@
+resolver: lts-11.6
+packages:
+- .
+extra-deps:
+  - binary-0.9.0.0
