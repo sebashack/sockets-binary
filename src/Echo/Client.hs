@@ -14,7 +14,7 @@ import Network.Socket ( defaultHints
 import Network.Socket.ByteString.Lazy (recv, sendAll)
 import Echo.Types
 import Data.Binary
-import qualified Data.ByteString.Lazy.Char8 as C
+
 
 resolve :: HostName -> ServiceName -> IO AddrInfo
 resolve host port = do
@@ -31,7 +31,12 @@ open addr = do
 
 talk :: Socket -> IO ()
 talk sock = do
-  sendAll sock (encode $ OpE Sum (IntE 1 ) (IntE 2))
+  sendAll sock (encode complexExp)
   msg <- recv sock 1024
   putStr "Received: "
   print (decode msg :: Int)
+
+complexExp :: Exp
+complexExp =
+  OpE Mult (OpE Mult (OpE Mult (IntE 1232) (IntE 233)) (IntE 233))
+           (OpE Mult (IntE 232) (OpE Mult (IntE 2322) (IntE 1004)))
