@@ -16,8 +16,10 @@ import Network.Socket ( defaultHints
                       , SocketType(..)
                       , Socket
                       , ServiceName )
-import Network.Socket.ByteString (recv, sendAll)
-import qualified Data.ByteString as S
+import Network.Socket.ByteString.Lazy (recv, sendAll)
+import Echo.Eval
+import Data.Binary
+import qualified Data.ByteString.Lazy as S
 
 
 resolve :: ServiceName -> IO AddrInfo
@@ -48,5 +50,6 @@ talk :: Socket -> IO ()
 talk conn = do
   msg <- recv conn 1024
   unless (S.null msg) $ do
-    sendAll conn msg
+    let result = eval (decode msg)
+    sendAll conn (encode result)
     talk conn
